@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: telegram_postgres
+    environment:
+      POSTGRES_USER: bot_user
+      POSTGRES_PASSWORD: bot_password
+      POSTGRES_DB: bot_db
+    networks:
+      - bot_network
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: always
+    ports:
+      - "5432:5432"
+
+  bot:
+    build: .
+    container_name: telegram_bot
+    environment:
+      BOT_TOKEN: "8796380258:AAGM0lR-s4FrjdOCdnOMswE0bcvrKhkfR64"
+      DB_HOST: telegram_postgres
+      POSTGRES_USER: bot_user
+      POSTGRES_PASSWORD: bot_password
+      POSTGRES_DB: bot_db
+    networks:
+      - bot_network
+    depends_on:
+      - db
+    restart: always
+
+networks:
+  bot_network:
+    external: true
+
+volumes:
+  pgdata:
