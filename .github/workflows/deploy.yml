@@ -20,7 +20,6 @@ jobs:
 
       - name: Run deploy script via SSH
         run: |
-          # Создаём временный файл ключа
           echo "${{ secrets.SSH_KEY }}" > /tmp/deploy_key
           chmod 600 /tmp/deploy_key
 
