@@ -18,9 +18,14 @@ jobs:
           -d chat_id="${{ secrets.CHAT_ID }}" \
           -d text="🚀 Деплой начался"
 
-      - name: Run deploy script locally
+      - name: Run deploy script via SSH
         run: |
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_KEY_PATH }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+          # Создаём временный файл ключа
+          echo "${{ secrets.SSH_KEY }}" > /tmp/deploy_key
+          chmod 600 /tmp/deploy_key
+
+          # Делаем SSH подключение и деплой
+          ssh -o StrictHostKeyChecking=no -i /tmp/deploy_key ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
             cd ~/telegram_bot
             git pull
             docker-compose down
