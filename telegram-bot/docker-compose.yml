@@ -21,6 +21,7 @@ services:
     container_name: telegram_bot
     environment:
       BOT_TOKEN: "8796380258:AAGM0lR-s4FrjdOCdnOMswE0bcvrKhkfR64"
+      CHAT_ID: "656121499"
       DB_HOST: telegram_postgres
       POSTGRES_USER: bot_user
       POSTGRES_PASSWORD: bot_password
@@ -29,6 +30,19 @@ services:
       - bot_network
     depends_on:
       - db
+    restart: always
+
+  monitor:
+    build: .
+    container_name: telegram_monitor
+    command: python3 monitor/monitor.py
+    environment:
+      BOT_TOKEN: "8796380258:AAGM0lR-s4FrjdOCdnOMswE0bcvrKhkfR64"
+      CHAT_ID: "656121499"
+    networks:
+      - bot_network
+    depends_on:
+      - bot
     restart: always
 
 networks:
