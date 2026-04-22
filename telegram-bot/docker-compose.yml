@@ -1,5 +1,4 @@
 version: '3.8'
-
 services:
   db:
     image: postgres:15
@@ -31,20 +30,14 @@ services:
     depends_on:
       - db
     restart: always
-
-  monitor:
-    build: .
-    container_name: telegram_monitor
-    command: python3 monitor/monitor.py
-    environment:
-      BOT_TOKEN: "8796380258:AAGM0lR-s4FrjdOCdnOMswE0bcvrKhkfR64"
-      CHAT_ID: "656121499"
-    networks:
-      - bot_network
-    depends_on:
-      - bot
-    restart: always
-
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host/root:ro
+      - ./app:/app
+ 
 networks:
   bot_network:
     external: true
